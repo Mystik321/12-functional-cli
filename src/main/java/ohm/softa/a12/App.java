@@ -3,6 +3,7 @@ package ohm.softa.a12;
 import ohm.softa.a12.cnjdb.JokeGenerator;
 import ohm.softa.a12.model.JokeDto;
 
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
@@ -28,11 +29,17 @@ public abstract class App {
              * use `skip` and `limit` to retrieve the required elements
              * and print the jokes to the STDOUT */
 
+			jokesSource
+				.filter(Objects::nonNull)
+					.filter(x -> x.getValue().length()<=80)
+						.limit(jokeCount-skipCount).forEach(System.out::println);
+
             System.out.println("If you want to quit press [Q] otherwise press [C] to continue.");
             var input = inputScanner.next();
             if (input.equals("q") || input.equals("Q")) {
                 shouldQuit = true;
             }
+
         } while (!shouldQuit);
         /* close the scanner before exiting */
         inputScanner.close();
@@ -72,11 +79,14 @@ public abstract class App {
                 switch (selection) {
                     case 1:
                         return jokeGenerator.randomJokesStream();
-                    default:
+                    case 2:
                         return jokeGenerator.allJokesStream();
+					default:
+						throw new Exception();
                 }
             } catch (Exception e) {
                 System.out.println("No valid selection");
+				inputScanner.next();
             }
         } while (true);
     }

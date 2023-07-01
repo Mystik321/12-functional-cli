@@ -23,6 +23,10 @@ public final class RandomJokeSupplier implements Supplier<JokeDto> {
     public JokeDto get() {
         /* TODO fetch a random joke synchronously
          * if an exception occurs return null */
-        throw new NotImplementedException("Method `get()` is not implemented");
+        try {
+			return icndbApi.getRandomJoke().get();
+		} catch (Exception e) {
+			return null;
+		}
     }
 }
